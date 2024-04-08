@@ -15,12 +15,18 @@ app = Flask(__name__)
 def rh():
     comando = f""" SELECT * FROM Tabela_base
 """
+    
     cursor.execute(comando)
     dados = cursor.fetchall()
+    descricao = cursor.description
+    colunas = [tupla[0] for tupla in descricao]
 
-    df_rh = pd.DataFrame(dados)
-    dic_df_rh = df_rh.to_json()
-    return dic_df_rh
+    df_rh = pd.DataFrame.from_records(dados, columns=colunas)
+    df_rh_json = df_rh.to_json()
+
+    return df_rh_json
+
+    
 
 if __name__ == '__main__':
     app.run()
